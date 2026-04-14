@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /home/zsn/Downloads/Trello -type f -exec wc -c {} +)",
+      "Bash(npx create-next-app@latest app --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack --use-npm)",
+      "Bash(ls src/generated/prisma/index* src/generated/prisma/package*)",
+      "Bash(npx prisma:*)",
+      "Read(//home/zsn/Downloads/trello-mobile/**)",
+      "Bash(npx expo:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx --prefix /home/zsn/Downloads/trello-mobile tsc --noEmit)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(pushd /home/zsn/Downloads/trello-mobile)",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(popd)",
+      "WebFetch(domain:expo.dev)",
+      "Bash(npm run:*)"
+    ]
+  }
+}
