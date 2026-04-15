@@ -1,0 +1,198 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  email              String    @unique
+  password           String
+  name               String?
+  role               String    @default("employee")
+  teamId             String?
+  discordId          String?   @unique
+  discordConnectedAt DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  team           Team?          @relation(fields: [teamId], references: [id])
+  boards         Board[]
+  comments       Comment[]
+  activities     Activity[]
+  attendances    Attendance[]
+  messageReplies MessageReply[]
+
+  @@index([teamId])
+  @@map("users")
+}
+
+model Team {
+  id         String   @id @default(cuid())
+  name       String
+  inviteCode String   @unique
+  adminId    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  members User[]
+  boards  Board[]
+
+  @@map("teams")
+}
+
+model Board {
+  id        String   @id @default(cuid())
+  title     String
+  ownerId   String
+  teamId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner           User             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  team            Team?            @relation(fields: [teamId], references: [id])
+  lists           List[]
+  activities      Activity[]
+  contactMessages ContactMessage[]
+
+  @@index([ownerId])
+  @@index([teamId])
+  @@map("boards")
+}
+
+model List {
+  id        String   @id @default(cuid())
+  title     String
+  position  Float
+  boardId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  board Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards Card[]
+
+  @@index([boardId])
+  @@map("lists")
+}
+
+model Card {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  position    Float
+  listId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  list     List      @relation(fields: [listId], references: [id], onDelete: Cascade)
+  comments Comment[]
+  labels   CardLabel[]
+
+  @@index([listId])
+  @@map("cards")
+}
+
+model Label {
+  id    String @id @default(cuid())
+  name  String
+  color String
+
+  cards CardLabel[]
+
+  @@map("labels")
+}
+
+model CardLabel {
+  cardId  String
+  labelId String
+
+  card  Card  @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  label Label @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@id([cardId, labelId])
+  @@map("card_labels")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  cardId    String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([cardId])
+  @@map("comments")
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  type      String
+  metadata  Json?
+  userId    String
+  boardId   String
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  board Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  @@index([boardId])
+  @@index([userId])
+  @@map("activities")
+}
+
+model ContactMessage {
+  id             String   @id @default(cuid())
+  boardId        String
+  senderName     String
+  senderEmail    String?
+  content        String
+  senderIp       String?
+  deliveryStatus String   @default("pending")
+  deliveryError  String?
+  createdAt      DateTime @default(now())
+
+  board   Board          @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  replies MessageReply[]
+
+  @@index([boardId])
+  @@map("contact_messages")
+}
+
+model MessageReply {
+  id               String   @id @default(cuid())
+  contactMessageId String
+  content          String
+  userId           String
+  createdAt        DateTime @default(now())
+
+  message ContactMessage @relation(fields: [contactMessageId], references: [id], onDelete: Cascade)
+  user    User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([contactMessageId])
+  @@map("message_replies")
+}
+
+model Attendance {
+  id          String    @id @default(cuid())
+  userId      String
+  date        String
+  signInAt    DateTime
+  signOutAt   DateTime?
+  signInNote  String?
+  signOutNote String?
+  createdAt   DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+  @@map("attendances")
+}

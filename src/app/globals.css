@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/* === DESIGN SYSTEM ===
+ * Gumroad-inspired: minimal, bold, content-first.
+ * Palette: near-black + white + single warm accent.
+ * Philosophy: generous space, large type, soft surfaces.
+ *
+ * Token naming uses "ink-" prefix for text-related colors
+ * to avoid colliding with Tailwind's text-* utility namespace.
+ */
+
+@theme inline {
+  --color-accent: #FF6154;
+  --color-accent-hover: #E8554A;
+  --color-surface: #FAFAFA;
+  --color-border: #E8E8E8;
+  --color-ink: #1A1A1A;
+  --color-ink-secondary: #878787;
+  --color-ink-tertiary: #B0B0B0;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #FF615433;
+  color: #1A1A1A;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #FF6154;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes pulse-dot {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
