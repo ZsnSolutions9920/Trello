@@ -6,6 +6,7 @@ import { useSocketBoard } from "@/hooks/useSocketBoard";
 import { BoardList } from "./BoardList";
 import { AddListForm } from "./AddListForm";
 import { CardDetailModal } from "./CardDetailModal";
+import { LoadingDots } from "@/components/ui/LoadingDots";
 import type { Card } from "@/types";
 import {
   DndContext,
@@ -135,11 +136,7 @@ export function BoardView({ boardId }: Props) {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-ink-tertiary rounded-full" style={{ animation: "pulse-dot 1.4s ease-in-out infinite" }} />
-          <div className="w-2 h-2 bg-ink-tertiary rounded-full" style={{ animation: "pulse-dot 1.4s ease-in-out 0.2s infinite" }} />
-          <div className="w-2 h-2 bg-ink-tertiary rounded-full" style={{ animation: "pulse-dot 1.4s ease-in-out 0.4s infinite" }} />
-        </div>
+        <LoadingDots />
       </div>
     );
   }
@@ -165,7 +162,7 @@ export function BoardView({ boardId }: Props) {
         onDragEnd={handleDragEnd}
       >
         <div className="h-full overflow-x-auto scrollbar-thin">
-          <div className="flex gap-5 px-6 py-5 h-full items-start justify-center min-w-fit mx-auto animate-fade-in">
+          <div className="animate-fade-in flex h-full min-w-fit items-start gap-4 px-4 py-4 sm:gap-5 sm:px-6 sm:py-5">
             {board.lists.map((list) => (
               <BoardList
                 key={list.id}

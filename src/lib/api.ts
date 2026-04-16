@@ -146,11 +146,11 @@ export const api = {
 
   attendance: {
     status: () =>
-      fetcher<{ status: "not_signed_in" | "signed_in" | "signed_out"; record: unknown }>(
+      fetcher<{ status: "not_signed_in" | "signed_in" | "signed_out"; record: AttendanceRecord | null }>(
         "/attendance",
       ),
     submit: (action: "sign-in" | "sign-out", photo: string) =>
-      fetcher<unknown>("/attendance", {
+      fetcher<AttendanceRecord>("/attendance", {
         method: "POST",
         body: JSON.stringify({ action, photo }),
       }),

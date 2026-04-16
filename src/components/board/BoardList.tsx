@@ -33,9 +33,8 @@ export function BoardList({ list, onOpenCardDetail }: Props) {
   };
 
   return (
-    <div className="bg-surface border border-border rounded-2xl w-[280px] flex-shrink-0 flex flex-col max-h-full">
-      {/* List header — clean, bold */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-2">
+    <div className="flex max-h-full w-[min(18rem,calc(100vw-2rem))] shrink-0 snap-start flex-col rounded-2xl border border-border bg-surface sm:w-[280px]">
+      <div className="flex items-center justify-between px-4 pb-2 pt-4">
         {isEditing ? (
           <input
             value={title}
@@ -53,13 +52,12 @@ export function BoardList({ list, onOpenCardDetail }: Props) {
           />
         ) : (
           <h3
-            className="font-bold text-sm text-ink cursor-pointer px-0.5 hover:text-accent transition-colors"
+            className="cursor-pointer px-0.5 text-sm font-bold text-ink transition-colors hover:text-accent"
             onClick={() => setIsEditing(true)}
           >
             {list.title}
           </h3>
         )}
-        {/* Card count + delete */}
         <div className="flex items-center gap-2 ml-2">
           <span className="text-xs text-ink-tertiary tabular-nums">
             {list.cards.length}
@@ -76,8 +74,10 @@ export function BoardList({ list, onOpenCardDetail }: Props) {
         </div>
       </div>
 
-      {/* Cards container */}
-      <div ref={setNodeRef} className="flex-1 overflow-y-auto px-3 pb-1 space-y-2 min-h-[4px] scrollbar-thin">
+      <div
+        ref={setNodeRef}
+        className="scrollbar-thin min-h-[4px] flex-1 space-y-2 overflow-y-auto px-3 pb-1"
+      >
         <SortableContext
           items={list.cards.map((c) => c.id)}
           strategy={verticalListSortingStrategy}
@@ -93,7 +93,6 @@ export function BoardList({ list, onOpenCardDetail }: Props) {
         </SortableContext>
       </div>
 
-      {/* Add card — bottom of list */}
       <div className="px-3 pb-3 pt-1">
         <AddCardForm listId={list.id} />
       </div>

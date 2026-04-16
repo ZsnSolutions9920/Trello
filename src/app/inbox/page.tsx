@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { Header } from "@/components/board/Header";
+import { LoadingDots } from "@/components/ui/LoadingDots";
 import { api } from "@/lib/api";
 import { getBoardColorById } from "@/lib/board-colors";
 import type { InboxThread, ContactMessageWithReplies } from "@/types";
@@ -32,6 +33,7 @@ export default function InboxPage() {
   const [loading, setLoading] = useState(true);
   const [selectedThread, setSelectedThread] = useState<InboxThread | null>(null);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessageWithReplies | null>(null);
+  const [showThreadList, setShowThreadList] = useState(true);
   const [replyContent, setReplyContent] = useState("");
   const [replying, setReplying] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
@@ -49,6 +51,7 @@ export default function InboxPage() {
   const handleSelectThread = (thread: InboxThread) => {
     setSelectedThread(thread);
     setSelectedMessage(thread.messages[0] || null);
+    setShowThreadList(false);
     setReplyContent("");
     setTimeout(() => chatRef.current?.scrollTo({ top: 0 }), 50);
   };
@@ -78,19 +81,18 @@ export default function InboxPage() {
   return (
     <div className="h-full flex flex-col bg-white">
       <Header backHref="/" />
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left — conversation list */}
-        <div className="w-[320px] border-r border-border flex flex-col shrink-0 bg-white">
+      <div className="flex flex-1 overflow-hidden">
+        <div
+          className={`${showThreadList ? "flex" : "hidden"} w-full flex-col bg-white lg:flex lg:w-[320px] lg:shrink-0 lg:border-r lg:border-border`}
+        >
           <div className="px-5 pt-5 pb-3">
             <h1 className="text-lg font-bold text-ink">Inbox</h1>
           </div>
 
           <div className="flex-1 overflow-y-auto">
             {loading ? (
-              <div className="flex items-center gap-2 py-16 justify-center">
-                <div className="w-2 h-2 bg-ink-tertiary rounded-full" style={{ animation: "pulse-dot 1.4s ease-in-out infinite" }} />
-                <div className="w-2 h-2 bg-ink-tertiary rounded-full" style={{ animation: "pulse-dot 1.4s ease-in-out 0.2s infinite" }} />
-                <div className="w-2 h-2 bg-ink-tertiary rounded-full" style={{ animation: "pulse-dot 1.4s ease-in-out 0.4s infinite" }} />
+              <div className="flex justify-center py-16">
+                <LoadingDots />
               </div>
             ) : threads.length === 0 ? (
               <div className="text-center py-16 px-6">
@@ -139,8 +141,9 @@ export default function InboxPage() {
           </div>
         </div>
 
-        {/* Right — conversation view */}
-        <div className="flex-1 flex flex-col bg-white">
+        <div
+          className={`${showThreadList ? "hidden" : "flex"} flex-1 flex-col bg-white lg:flex`}
+        >
           {!selectedThread || !selectedColor ? (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
@@ -154,23 +157,30 @@ export default function InboxPage() {
             </div>
           ) : (
             <>
-              {/* Conversation header with board color */}
               <div style={{ backgroundColor: selectedColor.hex }} className="h-1" />
-              <div className="px-6 py-3.5 border-b border-border flex items-center gap-3">
+              <div className="flex items-center gap-3 border-b border-border px-4 py-3.5 sm:px-6">
+                <button
+                  onClick={() => setShowThreadList(true)}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-ink-secondary transition-all duration-150 hover:bg-surface hover:text-ink lg:hidden"
+                  aria-label="Show conversations"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
                 <div
                   className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-bold shrink-0"
                   style={{ backgroundColor: selectedColor.hex }}
                 >
                   {selectedThread.boardTitle.charAt(0).toUpperCase()}
                 </div>
-                <div>
-                  <h2 className="text-[15px] font-bold text-ink">{selectedThread.boardTitle}</h2>
+                <div className="min-w-0">
+                  <h2 className="truncate text-[15px] font-bold text-ink">{selectedThread.boardTitle}</h2>
                   <p className="text-[11px] text-ink-tertiary">{selectedThread.messages.length} messages</p>
                 </div>
               </div>
 
-              {/* Messages */}
-              <div ref={chatRef} className="flex-1 overflow-y-auto px-6 py-5 space-y-4 bg-surface/20">
+              <div ref={chatRef} className="flex-1 overflow-y-auto bg-surface/20 px-4 py-5 space-y-4 sm:px-6">
                 {selectedThread.messages.map((msg, i) => {
                   const prevDate = i > 0 ? formatDate(selectedThread.messages[i - 1].createdAt) : null;
                   const thisDate = formatDate(msg.createdAt);
@@ -191,7 +201,6 @@ export default function InboxPage() {
                         className={`cursor-pointer transition-all duration-150 ${isActive ? "" : "opacity-70 hover:opacity-100"}`}
                         onClick={() => { setSelectedMessage(msg); setReplyContent(""); }}
                       >
-                        {/* Sender message — left aligned */}
                         <div className="flex gap-2.5 items-start">
                           <div
                             className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0"
@@ -204,16 +213,15 @@ export default function InboxPage() {
                               <span className="text-[13px] font-semibold text-ink">{msg.senderName}</span>
                               <span className="text-[10px] text-ink-tertiary">{formatTime(msg.createdAt)}</span>
                             </div>
-                            <div className="bg-white border border-border rounded-2xl rounded-tl-md px-3.5 py-2.5 shadow-sm inline-block max-w-[90%]">
+                            <div className="inline-block max-w-full rounded-2xl rounded-tl-md border border-border bg-white px-3.5 py-2.5 shadow-sm sm:max-w-[90%]">
                               <p className="text-[13px] text-ink leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                             </div>
                           </div>
                         </div>
 
-                        {/* Replies — right aligned */}
                         {msg.replies.map((r) => (
                           <div key={r.id} className="flex justify-end mt-2">
-                            <div className="max-w-[80%]">
+                            <div className="max-w-[90%] sm:max-w-[80%]">
                               <div
                                 className="rounded-2xl rounded-tr-md px-3.5 py-2.5 shadow-sm"
                                 style={{ backgroundColor: selectedColor.hexLight }}
@@ -230,10 +238,9 @@ export default function InboxPage() {
                 })}
               </div>
 
-              {/* Reply bar */}
               {selectedMessage && (
-                <div className="px-5 py-3 border-t border-border bg-white">
-                  <div className="flex gap-2 items-end">
+                <div className="border-t border-border bg-white px-4 py-3 sm:px-5">
+                  <div className="flex items-end gap-2">
                     <input
                       value={replyContent}
                       onChange={(e) => setReplyContent(e.target.value)}

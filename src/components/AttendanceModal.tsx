@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { CameraCapture } from "@/components/ui/CameraCapture";
+import { LoadingDots } from "@/components/ui/LoadingDots";
 import { api } from "@/lib/api";
+import type { AttendanceRecord } from "@/types";
 
 type AttendanceStatus = "not_signed_in" | "signed_in" | "signed_out";
 
@@ -11,7 +13,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   status: AttendanceStatus;
-  onStatusChange: (status: AttendanceStatus) => void;
+  onStatusChange: (status: AttendanceStatus, record: AttendanceRecord | null) => void;
 }
 
 export function AttendanceModal({ isOpen, onClose, status, onStatusChange }: Props) {
@@ -25,9 +27,9 @@ export function AttendanceModal({ isOpen, onClose, status, onStatusChange }: Pro
     setStep("submitting");
     setError("");
     try {
-      await api.attendance.submit(action, photo);
+      const record = await api.attendance.submit(action, photo);
       setStep("done");
-      onStatusChange(action === "sign-in" ? "signed_in" : "signed_out");
+      onStatusChange(action === "sign-in" ? "signed_in" : "signed_out", record);
       setTimeout(() => {
         onClose();
         setStep("confirm");
@@ -66,11 +68,7 @@ export function AttendanceModal({ isOpen, onClose, status, onStatusChange }: Pro
         </div>
       ) : step === "submitting" ? (
         <div className="text-center py-10">
-          <div className="flex items-center gap-2 justify-center mb-3">
-            <div className="w-2 h-2 bg-ink-tertiary rounded-full" style={{ animation: "pulse-dot 1.4s ease-in-out infinite" }} />
-            <div className="w-2 h-2 bg-ink-tertiary rounded-full" style={{ animation: "pulse-dot 1.4s ease-in-out 0.2s infinite" }} />
-            <div className="w-2 h-2 bg-ink-tertiary rounded-full" style={{ animation: "pulse-dot 1.4s ease-in-out 0.4s infinite" }} />
-          </div>
+          <LoadingDots className="mb-3 flex justify-center gap-2" />
           <p className="text-ink-secondary text-sm">Recording your attendance...</p>
         </div>
       ) : step === "camera" ? (

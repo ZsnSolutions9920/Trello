@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Boards — Project Management",
+  title: "Emma — Project Management",
   description: "Simple, beautiful project management. Organize anything.",
 };
 

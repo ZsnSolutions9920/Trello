@@ -50,7 +50,7 @@ export function BoardCard({ card, listId, onOpenDetail }: Props) {
       style={style}
       {...attributes}
       {...listeners}
-      className={`bg-white rounded-xl border border-border/60 px-3.5 py-2.5 cursor-grab active:cursor-grabbing group transition-all duration-150 ${
+      className={`group cursor-grab rounded-xl border border-border/60 bg-white px-3.5 py-2.5 transition-all duration-150 active:cursor-grabbing ${
         isDragging
           ? "shadow-lg scale-[1.02] rotate-[1deg]"
           : "shadow-none hover:shadow-md hover:-translate-y-px"
@@ -83,8 +83,7 @@ export function BoardCard({ card, listId, onOpenDetail }: Props) {
           <span className="text-sm text-ink leading-snug flex-1">
             {card.title}
           </span>
-          {/* Actions — revealed on hover */}
-          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150 shrink-0 -mr-1">
+          <div className="mr-[-0.25rem] flex shrink-0 items-center gap-0.5 opacity-100 transition-opacity duration-150 sm:opacity-0 sm:group-hover:opacity-100">
             <button
               onClick={(e) => {
                 e.stopPropagation();

@@ -105,7 +105,7 @@ export default function TeamSetupPage() {
     <div className="h-full flex flex-col items-center justify-center bg-white px-4">
       <div className="w-full max-w-sm animate-fade-in-up">
         <div className="mb-10">
-          <span className="text-2xl font-black tracking-tight text-ink">Boards</span>
+          <span className="text-2xl font-black tracking-tight text-ink">Emma</span>
         </div>
 
         {mode === "choice" ? (

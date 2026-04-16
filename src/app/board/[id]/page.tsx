@@ -27,12 +27,12 @@ export default function BoardPage({
         {board?.ownerDiscordConnected && (
           <button
             onClick={() => setShowContact(true)}
-            className="flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-lg text-ink-secondary hover:text-ink hover:bg-surface transition-all duration-150"
+            className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-sm font-medium text-ink-secondary transition-all duration-150 hover:bg-surface hover:text-ink sm:px-3"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
-            Message
+            <span className="hidden sm:inline">Message</span>
           </button>
         )}
       </Header>

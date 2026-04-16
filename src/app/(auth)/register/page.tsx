@@ -35,7 +35,7 @@ export default function RegisterPage() {
     <div className="h-full flex flex-col items-center justify-center bg-white px-4">
       <div className="mb-10">
         <span className="text-2xl font-black tracking-tight text-ink">
-          Boards
+          Emma
         </span>
       </div>
 

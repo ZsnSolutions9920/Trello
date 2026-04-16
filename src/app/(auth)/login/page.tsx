@@ -35,7 +35,7 @@ export default function LoginPage() {
       {/* Minimal brand mark */}
       <div className="mb-10">
         <span className="text-2xl font-black tracking-tight text-ink">
-          Boards
+          Emma
         </span>
       </div>
 

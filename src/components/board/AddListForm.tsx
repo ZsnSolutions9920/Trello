@@ -18,7 +18,7 @@ export function AddListForm() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="bg-surface border-2 border-dashed border-border hover:border-ink-tertiary text-ink-secondary hover:text-ink rounded-2xl w-[280px] flex-shrink-0 px-5 py-4 text-sm font-semibold text-left transition-all duration-200"
+        className="w-[min(18rem,calc(100vw-2rem))] shrink-0 rounded-2xl border-2 border-dashed border-border bg-surface px-5 py-4 text-left text-sm font-semibold text-ink-secondary transition-all duration-200 hover:border-ink-tertiary hover:text-ink sm:w-[280px]"
       >
         + Add list
       </button>
@@ -26,7 +26,7 @@ export function AddListForm() {
   }
 
   return (
-    <div className="bg-surface border border-border rounded-2xl w-[280px] flex-shrink-0 p-3 space-y-2 animate-fade-in-up">
+    <div className="animate-fade-in-up w-[min(18rem,calc(100vw-2rem))] shrink-0 space-y-2 rounded-2xl border border-border bg-surface p-3 sm:w-[280px]">
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
@@ -41,7 +41,7 @@ export function AddListForm() {
           }
         }}
       />
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row">
         <button
           onClick={handleSubmit}
           className="bg-black text-white text-sm px-3.5 py-1.5 rounded-lg font-semibold hover:bg-neutral-800 transition-all duration-150 active:scale-[0.97]"
