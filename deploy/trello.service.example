@@ -1,5 +1,5 @@
 [Unit]
-Description=Trello custom Next.js server
+Description=Emma custom Next.js server
 After=network.target
 
 [Service]
